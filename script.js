@@ -1,5 +1,12 @@
+const rockButton = document.getElementById("rock");
+const paperButton = document.getElementById("paper");
+const scissorsButton = document.getElementById("scissors");
+const resultDiv = document.getElementById("result");
+const resetButton = document.getElementById("reset");
+
 let humanScore = 0;
 let computerScore = 0;
+resetButton.style.display = "none";
 
 function getComputerChoice() {
   const choices = ["rock", "paper", "scissors"];
@@ -23,20 +30,36 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
-function playGame() {
-  for (let i = 0; i < 5; i++) {
-    const getHumanChoice = prompt(
-      "Enter your choice (rock, paper, scissors):",
-    ).toLowerCase();
-    const computerSelection = getComputerChoice();
-    playRound(getHumanChoice, computerSelection);
-    console.log(`player score: ${humanScore} computer score: ${computerScore}`);
-  }
-  if (humanScore > computerScore) {
-    console.log("Congratulations! You won the game!");
-  } else {
-    console.log("Sorry! You lost the game!");
+function playGame(humanChoice) {
+  const getHumanChoice = humanChoice;
+  const computerSelection = getComputerChoice();
+
+  const outcome = playRound(getHumanChoice, computerSelection);
+
+  resultDiv.textContent = outcome;
+  resultDiv.textContent += `\nYour score: ${humanScore} | Computer score: ${computerScore}`;
+
+  if (humanScore === 5 || computerScore === 5) {
+    rockButton.disabled = true;
+    paperButton.disabled = true;
+    scissorsButton.disabled = true;
+    resetButton.style.display = "block";
+    if (humanScore > computerScore) {
+      resultDiv.textContent += "\nCongratulations! You won the game!";
+    } else {
+      resultDiv.textContent += "\nSorry! The computer won the game!";
+    }
   }
 }
 
-playGame();
+rockButton.addEventListener("click", () => playGame("rock"));
+paperButton.addEventListener("click", () => playGame("paper"));
+scissorsButton.addEventListener("click", () => playGame("scissors"));
+resetButton.addEventListener("click", () => {
+  humanScore = 0;
+  computerScore = 0;
+  resetButton.style.display = "none";
+  rockButton.disabled = false;
+  paperButton.disabled = false;
+  scissorsButton.disabled = false;
+});
